@@ -1,8 +1,11 @@
 #ifndef CAN_COMMUNICATION_H
 #define CAN_COMMUNICATION_H
 
+#include <ACAN_T4.h>
+
+bool readCANMessage(CANMessage &msg);
+void sendCANMessage(const CANMessage &msg);
 void initCAN();
-bool readCANMessage(CAN_message_t &msg);
-void sendCANMessage(const CAN_message_t &msg);
 
 #endif // CAN_COMMUNICATION_H
+

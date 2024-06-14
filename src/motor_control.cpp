@@ -1,23 +1,21 @@
 #include "motor_control.h"
 #include "config.h"
-#include <FlexCAN.h>
+#include <ACAN_T4.h>
 
 extern volatile long encoderPosX;
 extern volatile long encoderPosY;
 
-FlexCAN canBus(500000); // Initialize CAN bus at 500 kbps
-
 void initMotors() {
-    canBus.begin();
+    // CAN initialization is now done in initCAN
 }
 
 void sendMotorCommand(int motorId, int command) {
-    CAN_message_t msg;
-    msg.id = motorId;
-    msg.len = 2;
-    msg.buf[0] = command >> 8;
-    msg.buf[1] = command & 0xFF;
-    canBus.write(msg);
+    CANMessage message;
+    message.id = motorId;
+    message.len = 2;
+    message.data[0] = command >> 8;
+    message.data[1] = command & 0xFF;
+    sendCANMessage(message);
 }
 
 void pidControl(long setPointX, long setPointY) {

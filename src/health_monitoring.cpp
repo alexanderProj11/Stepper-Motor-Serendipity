@@ -1,12 +1,10 @@
 #include "health_monitoring.h"
 #include "config.h"
 #include "motor_control.h"
-#include <ACS712.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Arduino.h>
 
-ACS712 motorCurrent(A0, 5.0); // Assuming current sensor on pin A0
 OneWire oneWire(4); // Pin 4
 DallasTemperature sensors(&oneWire);
 
@@ -15,8 +13,14 @@ void initHealthMonitoring() {
     pinMode(EMERGENCY_STOP_PIN, INPUT_PULLUP); // Assuming normally closed emergency stop button
 }
 
+// Assuming a 5A ACS712 sensor with a sensitivity of 185 mV/A
+const float ACS712_SENSITIVITY = 0.185; // Sensitivity in V/A
+const int ACS712_OFFSET = 512; // Midpoint value for zero current (assuming 10-bit ADC)
+
 float readCurrent() {
-    return motorCurrent.getCurrentAC();
+    int sensorValue = analogRead(A0); // Read the analog value from the sensor
+    float voltage = (sensorValue - ACS712_OFFSET) * (5.0 / 1024.0); // Convert to voltage
+    return voltage / ACS712_SENSITIVITY; // Convert to current
 }
 
 float readTemperature() {

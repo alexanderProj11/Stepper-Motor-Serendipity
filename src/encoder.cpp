@@ -7,12 +7,12 @@ volatile long encoderPosY = 0;
 volatile bool dirX = true;
 volatile bool dirY = true;
 
-void IRAM_ATTR readEncoderA() {
+void readEncoderA() {
     dirX = digitalRead(ENCODER_B_PIN);
     encoderPosX += (dirX ? 1 : -1);
 }
 
-void IRAM_ATTR readEncoderB() {
+void readEncoderB() {
     dirY = digitalRead(ENCODER_A_PIN);
     encoderPosY += (dirY ? -1 : 1);
 }

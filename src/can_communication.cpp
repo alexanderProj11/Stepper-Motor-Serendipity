@@ -1,16 +1,19 @@
 #include "can_communication.h"
-#include <FlexCAN.h>
-
-FlexCAN canBus(500000); // Initialize CAN bus at 500 kbps
+#include "config.h"
 
 void initCAN() {
-    canBus.begin();
+    ACAN_T4_Settings settings(500 * 1000); // Set to 500 kbps
+    const uint32_t errorCode = ACAN_T4::can1.begin(settings);
+    if (errorCode != 0) {
+        Serial.print("CAN initialization error: 0x");
+        Serial.println(errorCode, HEX);
+    }
 }
 
-bool readCANMessage(CAN_message_t &msg) {
-    return canBus.read(msg);
+bool readCANMessage(CANMessage &msg) {
+    return ACAN_T4::can1.receive(msg);
 }
 
-void sendCANMessage(const CAN_message_t &msg) {
-    canBus.write(msg);
+void sendCANMessage(const CANMessage &msg) {
+    ACAN_T4::can1.tryToSend(msg);
 }
