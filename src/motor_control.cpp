@@ -1,5 +1,6 @@
 #include "motor_control.h"
 #include "config.h"
+#include "can_communication.h" // Ensure can_communication is included
 #include <ACAN_T4.h>
 
 extern volatile long encoderPosX;
@@ -15,7 +16,7 @@ void sendMotorCommand(int motorId, int command) {
     message.len = 2;
     message.data[0] = command >> 8;
     message.data[1] = command & 0xFF;
-    sendCANMessage(message);
+    sendCANMessage(message); // Ensure this function is declared and used correctly
 }
 
 void pidControl(long setPointX, long setPointY) {
